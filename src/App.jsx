@@ -7,6 +7,34 @@ export default function App() {
   const [showTips, setShowTips] = useState(false);
   const [fields, setFields] = useState({ goal: "", identity: "", system: "" });
   const [focus, setFocus] = useState("");
+  const [goals, setGoals] = useState([]);
+  const [showDashboard, setShowDashboard] = useState(false);
+
+  function saveGoal() {
+    if (fields.goal) {
+      setGoals([...goals, fields]);
+      setFields({ goal: "", identity: "", system: "" });
+      setShowDashboard(true);
+    }
+  }
+
+  if (showDashboard) {
+    return (
+      <div className="app-container">
+        <h2>Deine Ziele</h2>
+        <ul>
+          {goals.map((g, i) => (
+            <li key={i}>
+              <strong>{g.goal}</strong><br />
+              <span>{g.identity}</span><br />
+              <span>{g.system}</span>
+            </li>
+          ))}
+        </ul>
+        <button onClick={() => setShowDashboard(false)}>Neues Ziel anlegen</button>
+      </div>
+    );
+  }
 
   return (
     <div className="app-container">
@@ -45,6 +73,7 @@ export default function App() {
         <Suggestions active={focus === "system"} type="system" input={fields.system} />
       </div>
       <button className="tips-btn" onClick={() => setShowTips(true)}>Tipps aus Atomic Habits</button>
+      <button style={{marginLeft: 12}} onClick={saveGoal}>Ziel speichern und Übersicht</button>
       {showTips && <TipsPanel onClose={() => setShowTips(false)} />}
     </div>
   );
